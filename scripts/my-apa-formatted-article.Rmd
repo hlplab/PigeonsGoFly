@@ -433,6 +433,36 @@ d %>%
 ```
 
 
+```{r load_all_solo_releases}
+GOAL <- c(616070, 5738228)
+d <- tibble()
+
+for (f in list.files("../data/Solo_SpeedCircleEnd/", pattern = "*.csv", full.names = TRUE, recursive=TRUE)) {
+  bird_id <- sub(".*Solo_SpeedCircleEnd/([^/]+)/.*", "\\1", f)
+  release <- sub(".*release_(\\d+).*", "\\1", f)
+  d %<>% bind_rows(read_csv(f) %>% 
+                     mutate(bird = bird_id, release = release))
+}
+
+d %<>% 
+  rename(x = easting, y=northing, t=time) %>%
+  select(x, y, t, bird, release) %>%
+  group_by(bird, release) %>%
+  mutate(
+    next_heading=atan2(lead(y, 1)-y, lead(x, 1)-x),
+    heading=lag(next_heading, 1),
+    mu_goal=atan2(GOAL[2]-y, GOAL[1]-x))
+d %>%
+  ggplot(aes(x, y, color=interaction(bird, release))) + 
+  geom_path(aes(group=interaction(bird, release))) + 
+  theme(legend.position="none")
+d %>%
+  ggplot(aes(t, mu_goal, color=interaction(bird, release))) + 
+  geom_line(aes(group=interaction(bird, release))) + 
+  theme(legend.position="none")
+```
+
+
 # Fitting a model to the data
 This section defines a Bayesian mixture of van Mises model. Set `echo=TRUE` to see the code in the knitted PDF.
 

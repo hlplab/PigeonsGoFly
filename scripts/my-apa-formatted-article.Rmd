@@ -439,7 +439,7 @@ d <- tibble()
 
 for (f in list.files("../data/Solo_SpeedCircleEnd/", pattern = "*.csv", full.names = TRUE, recursive=TRUE)) {
   bird_id <- sub(".*Solo_SpeedCircleEnd/([^/]+)/.*", "\\1", f)
-  release <- sub(".*release_(\\d+).*", "\\1", f)
+  release <- as.numeric(sub(".*release_(\\d+).*", "\\1", f))
   d %<>% bind_rows(read_csv(f) %>% 
                      mutate(bird = bird_id, release = release))
 }

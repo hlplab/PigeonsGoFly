@@ -521,8 +521,8 @@ m <-
         # Goal direction
         mu1 ~ 0 + offset(mu_goal),
         # kappa1 ~ 1, # 1 + (1 | flight) # In case we assume that the kappa is different for each pigeon/flight.
-        kappa1 ~ 1 + s(distance_to_goal),
-        theta1 ~ 1 + s(distance_to_goal) + (1 | flight),
+        kappa1 ~ distance_to_goal * release + (1 + release|bird),
+        theta1 ~ 1 + (1 | bird),
         # Social direction
         # mu2 ~ 0 + offset(mu_other),
         # kappa2 ~ 1,

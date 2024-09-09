@@ -96,6 +96,8 @@ always_allow_html: true
 
 <!-- THIS IS THE DOCUMENT THAT YOU USE FOR KNITTING. IT WILL KNIT ALL THE OTHER SECTIONS, TOO -->
 
+# Preamble
+Run this to include the necessary dependencies.
 ```{r, include=FALSE, message=FALSE}
 if (!exists("PREAMBLE_LOADED")) source("preamble.R")
 ```
@@ -432,6 +434,7 @@ d %>%
   theme(legend.position="none")
 ```
 
+# Load all solo releases
 
 ```{r load_all_solo_releases}
 GOAL <- c(616070, 5738228)

@@ -443,8 +443,10 @@ d <- tibble()
 for (f in list.files("../data/Solo_SpeedCircleEnd/", pattern = "*.csv", full.names = TRUE, recursive=TRUE)) {
   bird_id <- sub(".*Solo_SpeedCircleEnd/([^/]+)/.*", "\\1", f)
   release <- as.numeric(sub(".*release_(\\d+).*", "\\1", f))
-  d %<>% bind_rows(read_csv(f) %>% 
+  if (bird_id %in% c('B77', 'B85', 'B96')) { # Taking a subset of 2 random birds.
+      d %<>% bind_rows(read_csv(f) %>% 
                      mutate(bird = bird_id, release = release))
+  }
 }
 
 # Down sample data to 0.5Hz

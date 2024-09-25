@@ -443,16 +443,14 @@ d <- tibble()
 for (f in list.files("../data/Solo_SpeedCircleEnd/", pattern = "*.csv", full.names = TRUE, recursive=TRUE)) {
   bird_id <- sub(".*Solo_SpeedCircleEnd/([^/]+)/.*", "\\1", f)
   release <- as.numeric(sub(".*release_(\\d+).*", "\\1", f))
-  if (bird_id %in% c('B77', 'B85', 'B96')) { # Taking a subset of 2 random birds.
-      d %<>% bind_rows(read_csv(f) %>% 
+  d %<>% bind_rows(read_csv(f) %>% 
                      mutate(bird = bird_id, release = release))
-  }
 }
 
-# Down sample data to 0.5Hz
+# Down sample data to 0.2Hz
 d %<>% 
   group_by(bird, release) %>%
-  filter(row_number() %% 10 == 0) %>%
+  filter((row_number()-1) %% 25 == 0) %>%
   ungroup()
 
 d %<>% 
@@ -527,7 +525,7 @@ m <-
         mu1 ~ 0 + offset(mu_goal),
         # kappa1 ~ 1, # 1 + (1 | flight) # In case we assume that the kappa is different for each pigeon/flight.
         kappa1 ~ 1,
-        theta1 ~ distance_to_goal * release + (1 + release|bird),
+        theta1 ~ 1 + distance_to_goal * release + (1 + release|bird),
         # Social direction
         # mu2 ~ 0 + offset(mu_other),
         # kappa2 ~ 1,
